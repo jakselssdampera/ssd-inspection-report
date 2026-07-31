@@ -123,10 +123,9 @@ const INSPECTION_CATEGORIES = [
 
 // ─── Summary Fields ──────────────────────────────────────────────────
 const SUMMARY_FIELDS = [
-  { id: 'summaryCondition',    label: 'Ringkasan Kondisi Umum',  type: 'textarea', placeholder: 'Ringkasan keseluruhan kondisi mobil...' },
-  { id: 'summaryRecommend',    label: 'Rekomendasi Perbaikan',   type: 'textarea', placeholder: 'Daftar perbaikan yang disarankan...' },
-  { id: 'summaryCost',         label: 'Estimasi Biaya (Rp)',     type: 'number',   placeholder: '0' },
-  { id: 'summaryNotes',        label: 'Catatan Tambahan',        type: 'textarea', placeholder: 'Catatan lain dari mekanik...' }
+  { id: 'summaryCondition', label: 'Kondisi Umum Kendaraan', type: 'textarea', placeholder: 'Deskripsikan kondisi umum kendaraan...' },
+  { id: 'summaryRecommend', label: 'Rekomendasi Perbaikan', type: 'textarea', placeholder: 'Tuliskan rekomendasi perbaikan untuk customer...' },
+  { id: 'summaryNotes', label: 'Catatan Tambahan', type: 'textarea', placeholder: 'Catatan lain jika ada...' }
 ];
 
 // ─── Max photos per inspection item ──────────────────────────────────

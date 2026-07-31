@@ -20,10 +20,32 @@
 .pdf-header {
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid #f97316;
-  margin-bottom: 0;
+  justify-content: space-between;
+  padding: 10px 15px;
+  border: 1px solid #0000cc; /* Blue border matching image */
+  margin-bottom: 15px;
+  background: white;
+}
+
+.pdf-header-text {
+  flex: 1;
+  text-align: center;
+  padding-right: 15px;
+}
+
+.pdf-workshop-name {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #000;
+  margin: 0 0 4px 0;
+  letter-spacing: 0.5px;
+}
+
+.pdf-workshop-detail {
+  font-size: 11px;
+  color: #000;
+  margin: 2px 0;
 }
 
 .pdf-header-logo {
@@ -31,26 +53,9 @@
 }
 
 .pdf-logo {
-  width: 60px;
-  height: 60px;
+  width: 140px;
+  height: auto;
   object-fit: contain;
-}
-
-.pdf-header-info {
-  flex: 1;
-}
-
-.pdf-workshop-name {
-  font-size: 18px;
-  font-weight: 800;
-  color: #0a0f1a;
-  margin-bottom: 2px;
-}
-
-.pdf-workshop-detail {
-  font-size: 10px;
-  color: #555;
-  margin: 1px 0;
 }
 
 /* ─── Title Bar ─────────────────────────────────────────────────────── */

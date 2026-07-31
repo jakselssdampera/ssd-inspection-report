@@ -96,6 +96,7 @@ function renderCategoryBadges(stats) {
 function renderInspectionItem(categoryId, item) {
   const report = loadReport();
   const data = report.inspections?.[categoryId]?.[item.id] || { status: 'unchecked', note: '', photos: [] };
+  const hasPhotos = data.photos && data.photos.length > 0 && data.photos.some(p => p !== null);
 
   return `
     <div class="inspection-item" id="item-${item.id}" data-item-id="${item.id}">
@@ -123,14 +124,40 @@ function renderInspectionItem(categoryId, item) {
           <input type="text" id="note-${item.id}" class="item-note-input"
                  placeholder="Catatan..." value="${escapeHtml(data.note || '')}">
         </div>
+
+        <button type="button" class="btn-toggle-photo" aria-expanded="${hasPhotos ? 'true' : 'false'}"
+                aria-controls="photos-${item.id}" onclick="togglePhotos('${item.id}')">
+          <i data-lucide="camera" class="inline-icon"></i>
+          <span>${hasPhotos ? 'Sembunyikan Foto' : 'Lampirkan Foto'}</span>
+        </button>
         
-        <div class="item-photos" id="photos-${item.id}">
+        <div class="item-photos ${hasPhotos ? '' : 'hidden'}" id="photos-${item.id}">
           <!-- Photo slots rendered by JS -->
         </div>
       </div>
     </div>
   `;
 }
+
+// ─── Photo Toggle Handler ────────────────────────────────────────────
+
+window.togglePhotos = function(itemId) {
+  const container = document.getElementById(`photos-${itemId}`);
+  const btn = document.querySelector(`button[aria-controls="photos-${itemId}"]`);
+  
+  if (container && btn) {
+    const isHidden = container.classList.contains('hidden');
+    if (isHidden) {
+      container.classList.remove('hidden');
+      btn.setAttribute('aria-expanded', 'true');
+      btn.querySelector('span').textContent = 'Sembunyikan Foto';
+    } else {
+      container.classList.add('hidden');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.querySelector('span').textContent = 'Lampirkan Foto';
+    }
+  }
+};
 
 // ─── Initialize Inspection Item Events ───────────────────────────────
 
@@ -238,7 +265,7 @@ function renderSummaryForm() {
         <div class="form-group form-group-full">
           <label for="${field.id}" class="form-label">${field.label}</label>
           <textarea id="${field.id}" name="${field.id}" class="form-textarea"
-                    placeholder="${field.placeholder}" rows="3">${escapeHtml(value)}</textarea>
+                    placeholder="${field.placeholder}" rows="4">${escapeHtml(value)}</textarea>
         </div>
       `;
     }

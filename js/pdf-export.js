@@ -80,14 +80,13 @@ function buildPDFContent(report, workshop) {
 function buildPDFHeader(workshop) {
   return `
     <div class="pdf-header">
-      <div class="pdf-header-logo">
-        <img src="${workshop.logo}" alt="Logo ${workshop.name}" class="pdf-logo" crossorigin="anonymous">
-      </div>
-      <div class="pdf-header-info">
+      <div class="pdf-header-text">
         <h1 class="pdf-workshop-name">${workshop.name}</h1>
         <p class="pdf-workshop-detail">${workshop.address}</p>
-        <p class="pdf-workshop-detail">Telp: ${workshop.phone} | WA: ${workshop.whatsapp}</p>
-        <p class="pdf-workshop-detail">Email: ${workshop.email}</p>
+        <p class="pdf-workshop-detail"><i>Telp/Whatsapp. ${workshop.whatsapp} &nbsp;&nbsp;&nbsp; E-Mail : ${workshop.email}</i></p>
+      </div>
+      <div class="pdf-header-logo">
+        <img src="${workshop.logo}" alt="Logo ${workshop.name}" class="pdf-logo" crossorigin="anonymous">
       </div>
     </div>
     <div class="pdf-title-bar">
@@ -203,7 +202,7 @@ function buildPDFSummary(report) {
 
       ${s.summaryCondition ? `
         <div class="pdf-summary-block">
-          <strong>Kondisi Umum:</strong>
+          <strong>Kondisi Umum Kendaraan:</strong>
           <p>${s.summaryCondition}</p>
         </div>
       ` : ''}
@@ -212,13 +211,6 @@ function buildPDFSummary(report) {
         <div class="pdf-summary-block">
           <strong>Rekomendasi Perbaikan:</strong>
           <p>${s.summaryRecommend}</p>
-        </div>
-      ` : ''}
-      
-      ${s.summaryCost ? `
-        <div class="pdf-summary-block">
-          <strong>Estimasi Biaya:</strong>
-          <p>Rp ${Number(s.summaryCost).toLocaleString('id-ID')}</p>
         </div>
       ` : ''}
       
