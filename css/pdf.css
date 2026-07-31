@@ -310,6 +310,10 @@
 }
 
 /* ─── Page Break Control ────────────────────────────────────────────── */
-.pdf-category-section {
+/* ONLY apply inside PDF render container to prevent browser layout freeze in Preview Modal */
+#pdf-render-container .pdf-category-section,
+#pdf-render-container .pdf-section,
+#pdf-render-container .pdf-footer {
   page-break-inside: avoid;
+  break-inside: avoid;
 }

@@ -194,7 +194,7 @@ function buildPDFInspections(report) {
     }).join('');
 
     return `
-      <div class="pdf-section pdf-category-section" style="page-break-inside: avoid;">
+      <div class="pdf-section pdf-category-section">
         <h3 class="pdf-section-title">${cat.id}. ${cat.name}</h3>
         <table class="pdf-table pdf-inspection-table">
           <thead>
@@ -221,7 +221,7 @@ function buildPDFSummary(report) {
   const stats = getInspectionStats();
 
   return `
-    <div class="pdf-section" style="page-break-inside: avoid;">
+    <div class="pdf-section">
       <h3 class="pdf-section-title">Ringkasan Inspeksi</h3>
       
       <div class="pdf-stats-bar">
@@ -263,7 +263,7 @@ function buildPDFFooter(report, workshop) {
   const mechanic = cust.mechanicName || '_______________';
 
   return `
-    <div class="pdf-footer" style="page-break-inside: avoid;">
+    <div class="pdf-footer">
       <div class="pdf-signature-area">
         <div class="pdf-signature-block">
           <p>Mengetahui,</p>
