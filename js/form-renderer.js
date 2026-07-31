@@ -233,6 +233,11 @@ function handleStatusChange(radio) {
 
   // Update category badge
   updateCategoryBadge(catId);
+
+  // Update progress bar
+  if (typeof updateProgressBar === 'function') {
+    updateProgressBar();
+  }
 }
 
 function updateCategoryBadge(categoryId) {
@@ -286,6 +291,33 @@ function renderSummaryForm() {
     }, 500));
   });
 }
+
+// ─── Progress Bar ────────────────────────────────────────────────────
+
+window.updateProgressBar = function() {
+  const report = loadReport();
+  const inspections = report.inspections || {};
+  let totalItems = 0;
+  let completedItems = 0;
+
+  INSPECTION_CATEGORIES.forEach(cat => {
+    totalItems += cat.items.length;
+    cat.items.forEach(item => {
+      const status = inspections[cat.id]?.[item.id]?.status;
+      if (status && status !== 'unchecked') {
+        completedItems++;
+      }
+    });
+  });
+
+  const percentage = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+  
+  const fill = document.getElementById('progress-fill');
+  const text = document.getElementById('progress-text');
+  
+  if (fill) fill.style.width = `${percentage}%`;
+  if (text) text.textContent = `${completedItems} / ${totalItems} (${percentage}%)`;
+};
 
 // ─── Utility ─────────────────────────────────────────────────────────
 

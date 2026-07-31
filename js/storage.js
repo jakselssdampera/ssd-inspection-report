@@ -5,9 +5,10 @@
  */
 
 const STORAGE_KEYS = {
+  REPORT: 'cir_current_report',
   WORKSHOP: 'cir_workshop_info',
-  REPORT:   'cir_current_report',
-  SESSION:  'cir_session'
+  SESSION: 'cir_session',
+  THEME: 'cir_theme'
 };
 
 // ─── In-memory cache (cache-first pattern) ───────────────────────────
@@ -16,7 +17,25 @@ let _cache = {
   report: null
 };
 
-// ─── Helpers ─────────────────────────────────────────────────────────
+// ─── Theme Management ──────────────────────────────────────────────────
+
+function getTheme() {
+  try {
+    return localStorage.getItem(STORAGE_KEYS.THEME) || 'dark';
+  } catch (e) {
+    return 'dark';
+  }
+}
+
+function saveTheme(theme) {
+  try {
+    localStorage.setItem(STORAGE_KEYS.THEME, theme);
+  } catch (e) {
+    console.warn('[Storage] Failed to save theme');
+  }
+}
+
+// ─── Utility ─────────────────────────────────────────────────────────
 
 function safeJSONParse(str) {
   try {

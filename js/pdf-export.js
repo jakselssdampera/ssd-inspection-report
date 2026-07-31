@@ -61,6 +61,36 @@ async function generatePDF() {
   }
 }
 
+// ─── Preview PDF ─────────────────────────────────────────────────────
+
+function showPDFPreview() {
+  const modal = document.getElementById('preview-modal');
+  const container = document.getElementById('preview-pdf-container');
+  
+  if (!modal || !container) return;
+
+  const report = loadReport();
+  const workshop = loadWorkshopInfo();
+  const pdfContent = buildPDFContent(report, workshop);
+
+  // Set content inside the container
+  container.innerHTML = pdfContent;
+
+  // Show modal
+  modal.classList.remove('hidden');
+  
+  // Disable body scroll
+  document.body.style.overflow = 'hidden';
+}
+
+function hidePDFPreview() {
+  const modal = document.getElementById('preview-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+}
+
 // ─── Build PDF HTML Content ──────────────────────────────────────────
 
 function buildPDFContent(report, workshop) {

@@ -122,6 +122,9 @@
       </nav>
 
       <div class="sidebar-footer">
+        <button type="button" id="btn-toggle-theme" class="btn btn-ghost" style="width:100%; margin-bottom:var(--space-2)">
+          <i data-lucide="sun"></i> Light Mode
+        </button>
         <button type="button" id="btn-logout" class="btn btn-ghost" style="width:100%">
           <i data-lucide="log-out"></i> Logout
         </button>
@@ -130,6 +133,17 @@
 
     <!-- ─── Main Content ────────────────────────────────────────────── -->
     <main class="main-content">
+
+      <!-- Progress Bar -->
+      <div id="inspection-progress-container" class="progress-container">
+        <div class="progress-header">
+          <span class="progress-title">Progres Inspeksi</span>
+          <span class="progress-text" id="progress-text">0 / 42 (0%)</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+        </div>
+      </div>
 
       <!-- Workshop Header -->
       <section id="section-workshop">
@@ -185,6 +199,9 @@
           </button>
         </div>
         <div class="footer-actions-right">
+          <button type="button" id="btn-preview-pdf" class="btn btn-secondary">
+            <i data-lucide="eye"></i> Preview Report
+          </button>
           <button type="button" id="btn-download-pdf" class="btn btn-primary">
             <i data-lucide="download"></i> Download PDF
           </button>
@@ -197,6 +214,26 @@
   <!-- ═══════════════════════════════════════════════════════════════════
        SCRIPTS (load order matters — no modules)
        ═══════════════════════════════════════════════════════════════════ -->
+  <!-- PDF Preview Modal -->
+  <div id="preview-modal" class="modal-overlay hidden">
+    <div class="modal-content preview-modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Preview Laporan</h3>
+        <button type="button" id="btn-close-preview" class="btn-icon" aria-label="Tutup Preview">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="modal-body preview-scroll-area">
+        <div id="preview-pdf-container"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-preview-download" class="btn btn-primary">
+          <i data-lucide="download"></i> Download PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script src="js/form-data.js"></script>
   <script src="js/storage.js"></script>
   <script src="js/ui.js"></script>

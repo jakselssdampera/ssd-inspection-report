@@ -224,3 +224,35 @@ function initMobileSidebar() {
     });
   }
 }
+
+// ─── Theme Toggle ──────────────────────────────────────────────────────
+
+function initTheme() {
+  const currentTheme = getTheme();
+  applyTheme(currentTheme);
+
+  const toggleBtn = document.getElementById('btn-toggle-theme');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const isLight = document.body.classList.contains('light-theme');
+      const newTheme = isLight ? 'dark' : 'light';
+      applyTheme(newTheme);
+      saveTheme(newTheme);
+    });
+  }
+}
+
+function applyTheme(theme) {
+  const toggleBtn = document.getElementById('btn-toggle-theme');
+  if (theme === 'light') {
+    document.body.classList.add('light-theme');
+    if (toggleBtn) toggleBtn.innerHTML = '<i data-lucide="moon"></i> Dark Mode';
+  } else {
+    document.body.classList.remove('light-theme');
+    if (toggleBtn) toggleBtn.innerHTML = '<i data-lucide="sun"></i> Light Mode';
+  }
+
+  if (window.lucide && toggleBtn) {
+    lucide.createIcons({ nodes: [toggleBtn] });
+  }
+}

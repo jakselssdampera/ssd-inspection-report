@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initApp() {
+  // Init Theme
+  initTheme();
+
   // Check login state
   if (isLoggedIn()) {
     showAppView();
@@ -93,6 +96,11 @@ function bootstrapApp() {
   initSidebarNav();
   initMobileSidebar();
 
+  // Initialize progress bar
+  if (typeof updateProgressBar === 'function') {
+    updateProgressBar();
+  }
+
   // Initialize Lucide icons
   if (window.lucide) lucide.createIcons();
 
@@ -137,6 +145,27 @@ function initGlobalActions() {
   const pdfBtn = document.getElementById('btn-download-pdf');
   if (pdfBtn) {
     pdfBtn.addEventListener('click', () => generatePDF());
+  }
+
+  // Preview PDF
+  const previewBtn = document.getElementById('btn-preview-pdf');
+  if (previewBtn) {
+    previewBtn.addEventListener('click', () => showPDFPreview());
+  }
+
+  // Close Preview
+  const closePreviewBtn = document.getElementById('btn-close-preview');
+  if (closePreviewBtn) {
+    closePreviewBtn.addEventListener('click', () => hidePDFPreview());
+  }
+
+  // Download from Preview
+  const previewDownloadBtn = document.getElementById('btn-preview-download');
+  if (previewDownloadBtn) {
+    previewDownloadBtn.addEventListener('click', () => {
+      hidePDFPreview();
+      generatePDF();
+    });
   }
 
   // Reset Report
