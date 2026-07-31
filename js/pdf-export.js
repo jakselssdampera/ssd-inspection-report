@@ -31,8 +31,7 @@ async function generatePDF() {
       filename: generateFilename(report),
       image: { type: 'jpeg', quality: 0.95 },
       html2canvas: {
-        scale: 2,
-        useCORS: true,
+        scale: 1.5,
         letterRendering: true,
         logging: false
       },
