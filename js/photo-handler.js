@@ -182,8 +182,9 @@ async function handlePhotoUpload(slotEl, itemId, slotIndex, file) {
 function handlePhotoDelete(slotEl, itemId, slotIndex) {
   const report = loadReport();
   const catId = itemId.charAt(0);
-  if (report.inspections[catId]?.[itemId]?.photos) {
-    report.inspections[catId][itemId].photos[slotIndex] = null;
+  const catData = report.inspections && report.inspections[catId] ? report.inspections[catId] : null;
+  if (catData && catData[itemId] && catData[itemId].photos) {
+    catData[itemId].photos[slotIndex] = null;
     saveReport(report);
   }
 

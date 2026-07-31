@@ -197,8 +197,8 @@ function getInspectionStats() {
 
   INSPECTION_CATEGORIES.forEach(cat => {
     cat.items.forEach(item => {
-      const data = report.inspections?.[cat.id]?.[item.id];
-      const status = data?.status || 'unchecked';
+      const data = report.inspections && report.inspections[cat.id] ? report.inspections[cat.id][item.id] : undefined;
+      const status = (data && data.status) ? data.status : 'unchecked';
       stats[status]++;
       stats.total++;
     });
@@ -210,7 +210,7 @@ function getInspectionStats() {
 function getCategoryStats(categoryId) {
   const report = loadReport();
   const stats = { good: 0, warning: 0, danger: 0, unchecked: 0, total: 0 };
-  const catData = report.inspections?.[categoryId];
+  const catData = report.inspections ? report.inspections[categoryId] : undefined;
 
   if (catData) {
     Object.values(catData).forEach(item => {

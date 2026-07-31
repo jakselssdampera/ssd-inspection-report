@@ -116,7 +116,7 @@ function buildPDFHeader(workshop) {
         <p class="pdf-workshop-detail"><i>Telp/Whatsapp. ${workshop.whatsapp} &nbsp;&nbsp;&nbsp; E-Mail : ${workshop.email}</i></p>
       </div>
       <div class="pdf-header-logo">
-        <img src="${workshop.logo}" alt="Logo ${workshop.name}" class="pdf-logo" crossorigin="anonymous">
+        <img src="${workshop.logo}" alt="Logo ${workshop.name}" class="pdf-logo">
       </div>
     </div>
     <div class="pdf-title-bar">
@@ -162,7 +162,8 @@ function buildPDFCustomerInfo(report) {
 function buildPDFInspections(report) {
   return INSPECTION_CATEGORIES.map(cat => {
     const items = cat.items.map(item => {
-      const data = report.inspections?.[cat.id]?.[item.id] || {};
+      const catData = report.inspections && report.inspections[cat.id] ? report.inspections[cat.id] : null;
+      const data = (catData && catData[item.id]) ? catData[item.id] : {};
       const status = data.status || 'unchecked';
       const statusInfo = STATUS_OPTIONS.find(s => s.value === status);
       const photos = (data.photos || []).filter(Boolean);
@@ -257,10 +258,9 @@ function buildPDFSummary(report) {
 // ─── PDF Footer ──────────────────────────────────────────────────────
 
 function buildPDFFooter(report, workshop) {
-  const date = report.customer?.inspectionDate 
-    ? formatDate(report.customer.inspectionDate) 
-    : formatDate(new Date().toISOString().split('T')[0]);
-  const mechanic = report.customer?.mechanicName || '_______________';
+  const cust = report.customer || {};
+  const dateStr = cust.inspectionDate ? formatDate(cust.inspectionDate) : formatDate(new Date().toISOString().split('T')[0]);
+  const mechanic = cust.mechanicName || '_______________';
 
   return `
     <div class="pdf-footer" style="page-break-inside: avoid;">
@@ -278,7 +278,7 @@ function buildPDFFooter(report, workshop) {
         </div>
       </div>
       <div class="pdf-footer-info">
-        <p>${workshop.name} — ${date}</p>
+        <p>${workshop.name} — ${dateStr}</p>
         <p class="pdf-disclaimer">Dokumen ini digenerate secara digital dan berlaku tanpa tanda tangan basah.</p>
       </div>
     </div>
@@ -288,9 +288,10 @@ function buildPDFFooter(report, workshop) {
 // ─── Helpers ─────────────────────────────────────────────────────────
 
 function generateFilename(report) {
-  const customer = report.customer?.customerName || 'Customer';
-  const plate = report.customer?.vehiclePlate || 'NoPol';
-  const date = report.customer?.inspectionDate || new Date().toISOString().split('T')[0];
+  const c = report.customer || {};
+  const customer = c.customerName || 'Customer';
+  const plate = c.vehiclePlate || 'NoPol';
+  const date = c.inspectionDate || new Date().toISOString().split('T')[0];
 
   const clean = (str) => str.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_');
   return `Inspeksi_${clean(customer)}_${clean(plate)}_${date}.pdf`;

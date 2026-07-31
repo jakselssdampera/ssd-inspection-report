@@ -14,7 +14,7 @@ function renderCustomerForm() {
   const report = loadReport();
 
   container.innerHTML = CUSTOMER_FIELDS.map(field => {
-    const value = report.customer?.[field.id] || '';
+    const value = (report.customer && report.customer[field.id]) ? report.customer[field.id] : '';
     const defaultVal = field.type === 'date' && !value
       ? new Date().toISOString().split('T')[0]
       : value;
@@ -95,7 +95,8 @@ function renderCategoryBadges(stats) {
 
 function renderInspectionItem(categoryId, item) {
   const report = loadReport();
-  const data = report.inspections?.[categoryId]?.[item.id] || { status: 'unchecked', note: '', photos: [] };
+  const catData = report.inspections && report.inspections[categoryId] ? report.inspections[categoryId] : null;
+  const data = (catData && catData[item.id]) ? catData[item.id] : { status: 'unchecked', note: '', photos: [] };
   const hasPhotos = data.photos && data.photos.length > 0 && data.photos.some(p => p !== null);
 
   return `
@@ -193,7 +194,8 @@ function initInspectionEvents() {
       const photosContainer = document.getElementById(`photos-${item.id}`);
       if (photosContainer) {
         const report = loadReport();
-        const photos = report.inspections?.[cat.id]?.[item.id]?.photos || [];
+        const catData = report.inspections && report.inspections[cat.id] ? report.inspections[cat.id] : null;
+        const photos = (catData && catData[item.id] && catData[item.id].photos) ? catData[item.id].photos : [];
 
         for (let i = 0; i < MAX_PHOTOS_PER_ITEM; i++) {
           const slot = createPhotoSlot(item.id, i, photos[i] || null);
@@ -263,7 +265,7 @@ function renderSummaryForm() {
   const report = loadReport();
 
   container.innerHTML = SUMMARY_FIELDS.map(field => {
-    const value = report.summary?.[field.id] || '';
+    const value = (report.summary && report.summary[field.id]) ? report.summary[field.id] : '';
     
     if (field.type === 'textarea') {
       return `
@@ -303,7 +305,8 @@ window.updateProgressBar = function() {
   INSPECTION_CATEGORIES.forEach(cat => {
     totalItems += cat.items.length;
     cat.items.forEach(item => {
-      const status = inspections[cat.id]?.[item.id]?.status;
+      const catData = inspections && inspections[cat.id] ? inspections[cat.id] : null;
+      const status = (catData && catData[item.id]) ? catData[item.id].status : undefined;
       if (status && status !== 'unchecked') {
         completedItems++;
       }
