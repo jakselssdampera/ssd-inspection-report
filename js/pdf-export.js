@@ -18,8 +18,11 @@ async function generatePDF() {
     const report = loadReport();
     const workshop = loadWorkshopInfo();
     
+    // Automatically detect backend URL based on current server IP
+    const backendUrl = window.location.protocol + '//' + window.location.hostname + ':3001';
+    
     // Request backend to generate PDF
-    const response = await fetch('http://localhost:3001/api/pdf/generate', {
+    const response = await fetch(`${backendUrl}/api/pdf/generate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ report, workshop })
@@ -34,12 +37,12 @@ async function generatePDF() {
     while (!pdfUrl && attempts < 60) {
       await new Promise(r => setTimeout(r, 1000)); // Poll every 1 second
       
-      const statusRes = await fetch(`http://localhost:3001/api/pdf/status/${jobId}`);
+      const statusRes = await fetch(`${backendUrl}/api/pdf/status/${jobId}`);
       if (!statusRes.ok) continue;
 
       const statusData = await statusRes.json();
       if (statusData.status === 'completed') {
-        pdfUrl = 'http://localhost:3001' + statusData.url;
+        pdfUrl = backendUrl + statusData.url;
         break;
       } else if (statusData.status === 'failed') {
         throw new Error('Worker failed to generate PDF: ' + statusData.error);
