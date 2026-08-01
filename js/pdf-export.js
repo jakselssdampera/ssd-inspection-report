@@ -17,37 +17,52 @@ async function generatePDF() {
   try {
     const report = loadReport();
     const workshop = loadWorkshopInfo();
-    const pdfContent = buildPDFContent(report, workshop);
+    
+    // Request backend to generate PDF
+    const response = await fetch('http://localhost:3001/api/pdf/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ report, workshop })
+    });
 
-    // Create temporary container
-    const tempDiv = document.createElement('div');
-    tempDiv.id = 'pdf-render-container';
-    tempDiv.innerHTML = pdfContent;
-    document.body.appendChild(tempDiv);
+    if (!response.ok) throw new Error('Failed to request PDF generation');
+    const { jobId } = await response.json();
 
-    // Configure html2pdf
-    const options = {
-      margin: [10, 10, 15, 10],
-      filename: generateFilename(report),
-      image: { type: 'jpeg', quality: 0.95 },
-      html2canvas: {
-        scale: 1.5,
-        letterRendering: true,
-        logging: false
-      },
-      jsPDF: {
-        unit: 'mm',
-        format: 'a4',
-        orientation: 'portrait'
-      },
-      pagebreak: { mode: ['css', 'legacy'] }
-    };
+    // Polling loop
+    let pdfUrl = null;
+    let attempts = 0;
+    while (!pdfUrl && attempts < 60) {
+      await new Promise(r => setTimeout(r, 1000)); // Poll every 1 second
+      
+      const statusRes = await fetch(`http://localhost:3001/api/pdf/status/${jobId}`);
+      if (!statusRes.ok) continue;
 
-    await html2pdf().set(options).from(tempDiv).save();
+      const statusData = await statusRes.json();
+      if (statusData.status === 'completed') {
+        pdfUrl = 'http://localhost:3001' + statusData.url;
+        break;
+      } else if (statusData.status === 'failed') {
+        throw new Error('Worker failed to generate PDF: ' + statusData.error);
+      }
+      
+      attempts++;
+    }
 
-    // Cleanup
-    tempDiv.remove();
-    showToast('PDF berhasil didownload!', 'good');
+    if (pdfUrl) {
+      // Trigger download
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.download = generateFilename(report);
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      
+      showToast('PDF berhasil didownload!', 'good');
+    } else {
+      throw new Error('PDF Generation timeout');
+    }
+
   } catch (err) {
     console.error('[PDF] Generation failed:', err);
     showToast('Gagal membuat PDF. Coba lagi.', 'danger');
